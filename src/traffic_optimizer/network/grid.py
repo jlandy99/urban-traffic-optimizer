@@ -1,5 +1,6 @@
 import json
 import random
+import numpy as np
 from dataclasses import dataclass, field
 
 from .intersection import Intersection, IntersectionType
@@ -12,6 +13,11 @@ class Grid:
     cols: int
     seed: int
     intersections: list[Intersection]
+    edge_weights: list[list[float]] = None
+
+    def __post_init__(self):
+        # For now, initialize all edge weights in the Grid to 1
+        self.edge_weights = np.ones((self.rows, self.cols))
 
     def to_dict(self) -> dict:
         return {

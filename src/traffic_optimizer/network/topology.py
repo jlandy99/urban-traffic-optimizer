@@ -10,6 +10,7 @@ class Topology:
         destination: tuple[int],
         rows: int,
         cols: int,
+        grid_weights: list[list[float]],
     ) -> list[tuple[int]]:
         # For now, we default to Djikstra's
         return self.shortest_path_djikstra(
@@ -17,6 +18,7 @@ class Topology:
             destination=destination,
             rows=rows,
             cols=cols,
+            grid_weights=grid_weights,
         )
 
 
@@ -75,55 +77,46 @@ class Topology:
         destination: tuple[int],
         rows: int,
         cols: int,
+        grid_weights: list[list[float]],
     ) -> list[tuple[int]]:
         """
         Use Djikstra's to generate the shortest path between origin and destination
         Params:
             origin: list of ints representing [row, col] in 2d grid map
             destination: list of ints representing [row, col] in 2d grid map
+            grid_weights: 2D array of shapes (rows, cols) containing edge/cell weights
         Returns:
             List of vertices to optimally traverse between the nodes
         """
-        # 1. Edge case: origin is the destination
         if origin == destination:
             return [origin]
 
-        # 2. Priority queue stores tuples of (distance, current_node)
-        # Priority queue starts with the origin at a distance of 0
         pq = [(0, origin)]
-
-        # Track minimum distance to each cell
         distances = {origin: 0}
-
-        # Track the parent pointers to reconstruct the final path
         parent_map = {origin: None}
-
-        # Direction vectors for moving Up, Down, Left, Right
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
-        # 3. Main Loop
         while pq:
             current_dist, current_node = heapq.heappop(pq)
 
-            # Early exit if we reached the destination
             if current_node == destination:
                 break
 
-            # If we found a longer path to an already processed node, skip it
             if current_dist > distances.get(current_node, float('inf')):
                 continue
 
             r, c = current_node
 
-            # 4. Explore Neighbors
             for dr, dc in directions:
                 neighbor = (r + dr, c + dc)
                 nr, nc = neighbor
 
-                # Check boundaries of the rows x cols grid
+                # Check grid boundaries
                 if 0 <= nr < rows and 0 <= nc < cols:
-                    # Assume a standard uniform grid weight of 1 per step
-                    new_dist = current_dist + 1
+
+                    # 2. Use the destination cell's weight instead of a static value of 1
+                    edge_weight = grid_weights[nr][nc]
+                    new_dist = current_dist + edge_weight
 
                     # Relaxation step
                     if new_dist < distances.get(neighbor, float('inf')):
@@ -131,9 +124,8 @@ class Topology:
                         parent_map[neighbor] = current_node
                         heapq.heappush(pq, (new_dist, neighbor))
 
-        # 5. Path Reconstruction
         if destination not in parent_map:
-            return []  # Return empty list if destination is unreachable
+            return []
 
         path = []
         curr = destination
@@ -141,7 +133,6 @@ class Topology:
             path.append(curr)
             curr = parent_map[curr]
 
-        # Reverse path so it goes from origin -> destination
         return path[::-1]
 
     def path_to_sumo_edges(

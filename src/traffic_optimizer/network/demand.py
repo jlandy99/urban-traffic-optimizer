@@ -48,6 +48,7 @@ def generate_traffic_demand(
             destination,
             grid.rows,
             grid.cols,
+            grid.edge_weights,
         )
 
         # Convert into edges consumable by SUMO

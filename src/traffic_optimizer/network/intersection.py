@@ -3,9 +3,20 @@ from enum import Enum
 
 
 class IntersectionType(str, Enum):
-    SIGNAL = "signal"
+    PRIORITY = "priority"
+    PRIORITY_STOP = "priority_stop"
+    ALLWAY_STOP = "allway_stop"
+    TRAFFIC_LIGHT = "traffic_light"
     ROUNDABOUT = "roundabout"
-    STOP = "stop_controlled"
+
+
+SUMO_NODE_TYPES = {
+    IntersectionType.PRIORITY: "priority",
+    IntersectionType.PRIORITY_STOP: "priority_stop",
+    IntersectionType.ALLWAY_STOP: "allway_stop",
+    IntersectionType.TRAFFIC_LIGHT: "traffic_light",
+    IntersectionType.ROUNDABOUT: "roundabout",
+}
 
 
 @dataclass
@@ -43,9 +54,11 @@ class Intersection:
 
     def __str__(self) -> str:
         symbols = {
-            "signal": "S",
-            "roundabout": "R",
-            "stop_controlled": "T",
+            "priority": "Y",
+            "priority_stop": "2",
+            "allway_stop": "4",
+            "traffic_light": "L",
+            "roundabout": "O",
         }
 
         return symbols.get(self.intersection_type, "?")

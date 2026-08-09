@@ -2,8 +2,9 @@ import json
 import numpy as np
 import xml.etree.ElementTree as ET
 from pathlib import Path
-
 import traci
+
+from traffic_optimizer.simulation.diagnostics import print_sumo_diagnostics
 
 
 def gini(values):
@@ -72,6 +73,9 @@ def run_simulation(
             str(log_file),
         ]
     )
+
+    # Diagnostics for sanity checks
+    print_sumo_diagnostics()
 
     departed = set()
     arrived = set()

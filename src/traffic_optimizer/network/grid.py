@@ -12,9 +12,11 @@ from .road import Road
 # Do not change unless you also change there, otherwise the simulation functionality will break
 class GridMode(int, Enum):
     RANDOM = 1
-    ALL_STOPS = 2
-    ALL_SIGNALS = 3
-    ALL_ROUNDABOUTS = 4
+    ALL_PRIORITY = 2
+    ALL_PRIORITY_STOP = 3
+    ALL_ALLWAY_STOP = 4
+    ALL_TRAFFIC_LIGHT = 5
+    ALL_ROUNDABOUT = 6
 
 
 @dataclass
@@ -68,21 +70,35 @@ def generate_grid(
     mode: GridMode,
     output_mode: str = "verbose",
 ) -> Grid:
-    if mode == GridMode.ALL_SIGNALS:
+    if mode == GridMode.ALL_PRIORITY:
         return generate_uniform_grid(
             rows=rows,
             cols=cols,
-            intersection_type=IntersectionType.SIGNAL,
+            intersection_type=IntersectionType.PRIORITY,
             output_mode=output_mode,
         )
-    elif mode == GridMode.ALL_STOPS:
+    elif mode == GridMode.ALL_PRIORITY_STOP:
         return generate_uniform_grid(
             rows=rows,
             cols=cols,
-            intersection_type=IntersectionType.STOP,
+            intersection_type=IntersectionType.PRIORITY_STOP,
             output_mode=output_mode,
         )
-    elif mode == GridMode.ALL_ROUNDABOUTS:
+    elif mode == GridMode.ALL_ALLWAY_STOP:
+        return generate_uniform_grid(
+            rows=rows,
+            cols=cols,
+            intersection_type=IntersectionType.ALLWAY_STOP,
+            output_mode=output_mode,
+        )
+    elif mode == GridMode.ALL_TRAFFIC_LIGHT:
+        return generate_uniform_grid(
+            rows=rows,
+            cols=cols,
+            intersection_type=IntersectionType.TRAFFIC_LIGHT,
+            output_mode=output_mode,
+        )
+    elif mode == GridMode.ALL_ROUNDABOUT:
         return generate_uniform_grid(
             rows=rows,
             cols=cols,

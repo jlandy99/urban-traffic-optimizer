@@ -2,6 +2,7 @@ import subprocess
 from pathlib import Path
 
 from traffic_optimizer.network.grid import Grid
+from traffic_optimizer.network.intersection import SUMO_NODE_TYPES
 
 
 def generate_sumo_network(
@@ -31,7 +32,7 @@ def generate_sumo_network(
 
         node_lines.append(
             f'    <node id="node_{intersection.row}_{intersection.col}" '
-            f'x="{x}" y="{y}" type="priority"/>'
+            f'x="{x}" y="{y}" type="{SUMO_NODE_TYPES[intersection.intersection_type]}"/>'
         )
 
     node_lines.append("</nodes>")

@@ -140,8 +140,8 @@ def run_simulation(
     average_speed = total_speed / speed_samples if speed_samples > 0 else 0.0
 
     # Calculate distribution of waiting times
-    waiting_times = [
-        vehicle["waiting_time_s"]
+    time_loss = [
+        vehicle["time_loss_s"]
         for vehicle in per_vehicle_metrics.values()
     ]
     # Interpretation of Gini:
@@ -150,15 +150,15 @@ def run_simulation(
     # 0.30 → noticeable inequality
     # 0.50+ → substantial inequality
     # 1.00 → extreme inequality
-    waiting_gini = gini(waiting_times)
+    time_loss_gini = gini(time_loss)
 
     distribution_travel_time_metrics = {
-        "waiting_mean_s": round(np.mean(waiting_times), 3),
-        "waiting_median_s": round(np.median(waiting_times), 3),
-        "waiting_std_s": round(np.std(waiting_times), 3),
-        "waiting_p95_s": round(np.percentile(waiting_times, 95), 3),
-        "waiting_max_s": round(np.max(waiting_times), 3),
-        "waiting_gini": waiting_gini,
+        "time_loss_mean_s": round(np.mean(time_loss), 3),
+        "time_loss_median_s": round(np.median(time_loss), 3),
+        "time_loss_std_s": round(np.std(time_loss), 3),
+        "time_loss_p95_s": round(np.percentile(time_loss, 95), 3),
+        "time_loss_max_s": round(np.max(time_loss), 3),
+        "time_loss_gini": round(time_loss_gini, 3),
     }
 
     # Calculate route length distributions
@@ -186,12 +186,12 @@ def run_simulation(
     print(f"Average travel time:\t{round(average_travel_time, 3)}")
     print(f"Average speed:\t\t{round(average_speed, 3)}")
 
-    print(f"\nWaiting mean:\t\t{distribution_travel_time_metrics['waiting_mean_s']}")
-    print(f"Waiting median:\t\t{distribution_travel_time_metrics['waiting_median_s']}")
-    print(f"Waiting std:\t\t{distribution_travel_time_metrics['waiting_std_s']}")
-    print(f"Waiting p95:\t\t{distribution_travel_time_metrics['waiting_p95_s']}")
-    print(f"Waiting max:\t\t{distribution_travel_time_metrics['waiting_max_s']}")
-    print(f"Waiting Gini:\t\t{distribution_travel_time_metrics['waiting_gini']}")
+    print(f"\Time loss mean:\t\t{distribution_travel_time_metrics['time_loss_mean_s']}")
+    print(f"Time loss median:\t\t{distribution_travel_time_metrics['time_loss_median_s']}")
+    print(f"Time loss std:\t\t{distribution_travel_time_metrics['time_loss_std_s']}")
+    print(f"Time loss p95:\t\t{distribution_travel_time_metrics['time_loss_p95_s']}")
+    print(f"Time loss max:\t\t{distribution_travel_time_metrics['time_loss_max_s']}")
+    print(f"Time loss Gini:\t\t{distribution_travel_time_metrics['time_loss_gini']}")
 
     print(f"\nRoute Length mean:\t{distribution_route_length_metrics['length_mean_m']}")
     print(f"Route Length median:\t{distribution_route_length_metrics['length_median_m']}")
@@ -212,9 +212,10 @@ def run_simulation(
         print(f"Still active IDs:  {sorted(departed - arrived)}")
 
     return {
-        "total_waiting_time_s": round(total_waiting_time, 3),
-        "departed_vehicles": len(departed),
-        "arrived_vehicles": len(arrived),
-        "active_vehicles": len(departed - arrived),
-        "average_speed_mps": round(average_speed, 3),
+        # CUMULATIVE EFFICIENCY METRIC
+        "median_time_loss_s": float(distribution_travel_time_metrics["time_loss_median_s"]),
+        # UNIFORMITY / FAIRNESS METRIC
+        "gini_time_loss_s": float(distribution_travel_time_metrics["time_loss_gini"]),
+        # COST METRIC (to be implemented)
+        "cost": 0,
     }

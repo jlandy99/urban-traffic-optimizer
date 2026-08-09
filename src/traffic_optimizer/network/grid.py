@@ -66,30 +66,35 @@ def generate_grid(
     cols: int,
     seed: int,
     mode: GridMode,
+    output_mode: str = "verbose",
 ) -> Grid:
     if mode == GridMode.ALL_SIGNALS:
         return generate_uniform_grid(
             rows=rows,
             cols=cols,
-            intersection_type=IntersectionType.SIGNAL
+            intersection_type=IntersectionType.SIGNAL,
+            output_mode=output_mode,
         )
     elif mode == GridMode.ALL_STOPS:
         return generate_uniform_grid(
             rows=rows,
             cols=cols,
-            intersection_type=IntersectionType.STOP
+            intersection_type=IntersectionType.STOP,
+            output_mode=output_mode,
         )
     elif mode == GridMode.ALL_ROUNDABOUTS:
         return generate_uniform_grid(
             rows=rows,
             cols=cols,
-            intersection_type=IntersectionType.ROUNDABOUT
+            intersection_type=IntersectionType.ROUNDABOUT,
+            output_mode=output_mode,
         )
     elif mode == GridMode.RANDOM:
         return generate_random_grid(
             rows=rows,
             cols=cols,
             seed=seed,
+            output_mode=output_mode,
         )
 
 
@@ -97,6 +102,7 @@ def generate_uniform_grid(
     rows: int,
     cols: int,
     intersection_type: IntersectionType,
+    output_mode: str = "verbose",
 ) -> Grid:
     """
     Generate a uniform grid using a specified intersection type
@@ -117,17 +123,24 @@ def generate_uniform_grid(
             )
             id += 1
 
-    return Grid(
+    grid = Grid(
         rows=rows,
         cols=cols,
         intersections=intersections,
     )
+
+    if output_mode == "verbose":
+        print("=== Grid ===")
+        print(grid)
+
+    return grid
 
 
 def generate_random_grid(
     rows: int,
     cols: int,
     seed: int,
+    output_mode: str = "verbose",
 ) -> Grid:
     """
     Generate a random grid using a random seed
@@ -154,9 +167,15 @@ def generate_random_grid(
             )
             id += 1
 
-    return Grid(
+    grid = Grid(
         rows=rows,
         cols=cols,
         seed=seed,
         intersections=intersections,
     )
+
+    if output_mode == "verbose":
+        print("=== Grid ===")
+        print(grid)
+
+    return grid

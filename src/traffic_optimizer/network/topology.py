@@ -1,6 +1,13 @@
 from collections import deque
 from dataclasses import dataclass
 import heapq
+from enum import Enum
+
+
+class RoutingAlgorithm(str, Enum):
+    BFS = "BFS"
+    DJIKSTRAS = "DJIKSTRAS"
+
 
 @dataclass
 class Topology:
@@ -11,8 +18,8 @@ class Topology:
         rows: int,
         cols: int,
         grid_weights: list[list[float]],
+        routing_algorithm: RoutingAlgorithm = RoutingAlgorithm.DJIKSTRAS
     ) -> list[tuple[int]]:
-        # For now, we default to Djikstra's
         return self.shortest_path_djikstra(
             origin=origin,
             destination=destination,

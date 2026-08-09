@@ -13,21 +13,26 @@ def run_simulation(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     config_file = output_dir / "simulation.sumocfg"
+    tripinfo_file = (output_dir / "tripinfo.xml").resolve()
 
     config_file.write_text(
         f"""\
-<configuration>
-    <input>
-        <net-file value="{network_file.name}"/>
-        <route-files value="{routes_file.name}"/>
-    </input>
+            <configuration>
+                <input>
+                    <net-file value="{network_file.name}"/>
+                    <route-files value="{routes_file.name}"/>
+                </input>
 
-    <time>
-        <begin value="0"/>
-        <end value="{end_time}"/>
-    </time>
-</configuration>
-"""
+                <output>
+                    <tripinfo-output value="{tripinfo_file}"/>
+                </output>
+
+                <time>
+                    <begin value="0"/>
+                    <end value="{end_time}"/>
+                </time>
+            </configuration>
+        """
     )
 
     log_file = output_dir / "sumo.log"
@@ -43,6 +48,9 @@ def run_simulation(
             str(log_file),
         ]
     )
+
+    departed = set()
+    arrived = set()
 
     total_waiting_time = 0.0
     total_speed = 0.0
@@ -60,7 +68,8 @@ def run_simulation(
 
             speed_samples += 1
 
-    completed_vehicles = traci.simulation.getArrivedNumber()
+        departed.update(traci.simulation.getDepartedIDList())
+        arrived.update(traci.simulation.getArrivedIDList())
 
     traci.close()
 
@@ -68,6 +77,8 @@ def run_simulation(
 
     return {
         "total_waiting_time_s": round(total_waiting_time, 3),
-        "completed_vehicles": completed_vehicles,
+        "departed_vehicles": len(departed),
+        "arrived_vehicles": len(arrived),
+        "active_vehicles": len(departed - arrived),
         "average_speed_mps": round(average_speed, 3),
     }

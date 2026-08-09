@@ -28,7 +28,7 @@ def main() -> None:
     routes_file = generate_traffic_demand(
         grid=grid,
         output_dir=output_dir,
-        num_vehicles=100,
+        num_vehicles=10,
         seed=42,
     )
 
@@ -45,8 +45,6 @@ def main() -> None:
     )
 
     print("Simulation complete.")
-    print(f"Results: {results_file}")
-    print(metrics)
 
 
 if __name__ == "__main__":

@@ -24,6 +24,9 @@ def generate_traffic_demand(
         'sigma="0.5" length="5" maxSpeed="13.89"/>',
     ]
 
+    # Output
+    print("\n=== Generated Routes ===")
+
     for vehicle_id in range(num_vehicles):
         # We want to start from vertices
         origin = (
@@ -54,6 +57,12 @@ def generate_traffic_demand(
         # Convert into edges consumable by SUMO
         route_edges = topology.path_to_sumo_edges(path)
         route_str = " ".join(route_edges)
+
+        print(
+            f"ID: {vehicle_id}: "
+            f"Route: {origin} → {destination} | "
+            f"SUMO Edge Path: {route_str}"
+        )
 
         lines.append(
             f'    <vehicle id="veh_{vehicle_id}" ' f'type="car" depart="{vehicle_id}">'

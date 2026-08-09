@@ -7,6 +7,8 @@ name = "urban-traffic-optimizer"
 version = "0.1.0"
 description = "Urban transportation infrastructure and traffic control optimization"
 requires-python = ">=3.12"
+# Set the maximum line length before wrapping text
+line-length = 88
 
 dependencies = [
     "numpy",
@@ -20,3 +22,9 @@ testpaths = ["tests"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.ruff.format]
+# Prefer double quotes over single quotes
+quote-style = "double"
+# Use tab instead of space
+indent-style = "tab"

@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+
+# Environment / secrets
+.env
+.env.*
+
+# Generated data
+data/generated/
+data/processed/
+
+# Simulation outputs
+outputs/
+
+# IDE
+.vscode/

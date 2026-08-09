@@ -67,8 +67,9 @@ def main(args: list[str] | None = None) -> int:
         routing_algorithm=args.routing_algorithm,
         filename=args.filename,
     )
-    evaluate_scenario(scenario)
-    print("Simulation complete.")
+    metrics = evaluate_scenario(scenario)
+    print("\n=== Simulation Results ===")
+    print(metrics)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ import random
 from pathlib import Path
 
 from traffic_optimizer.network.grid import Grid
+from traffic_optimizer.network.topology import Topology
 
 
 def generate_traffic_demand(
@@ -16,20 +17,6 @@ def generate_traffic_demand(
 
     rng = random.Random(seed)
 
-    possible_edges = []
-
-    # Horizontal edges
-    for row in range(grid.rows):
-        for col in range(grid.cols - 1):
-            possible_edges.append(f"east_{row}_{col}")
-            possible_edges.append(f"west_{row}_{col}")
-
-    # Vertical edges
-    for row in range(grid.rows - 1):
-        for col in range(grid.cols):
-            possible_edges.append(f"south_{row}_{col}")
-            possible_edges.append(f"north_{row}_{col}")
-
     lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         "<routes>",
@@ -38,16 +25,39 @@ def generate_traffic_demand(
     ]
 
     for vehicle_id in range(num_vehicles):
-        origin, destination = rng.sample(possible_edges, 2)
+        # We want to start from vertices
+        origin = (
+            rng.randrange(grid.rows),
+            rng.randrange(grid.cols),
+        )
+        destination = (
+            rng.randrange(grid.rows),
+            rng.randrange(grid.cols),
+        )
+        # Fail safe: make sure the origin isn't the same as destination
+        while destination == origin:
+            destination = (
+                rng.randrange(grid.rows),
+                rng.randrange(grid.cols),
+            )
+
+        # Choose the shortest (valid) path between the origin and destination
+        topology = Topology()
+        path = topology.shortest_path(
+            origin,
+            destination,
+            grid.rows,
+            grid.cols,
+        )
+
+        # Convert into edges consumable by SUMO
+        route_edges = topology.path_to_sumo_edges(path)
+        route_str = " ".join(route_edges)
 
         lines.append(
             f'    <vehicle id="veh_{vehicle_id}" ' f'type="car" depart="{vehicle_id}">'
         )
-
-        # This is intentionally temporary.
-        # We'll replace it with actual route calculation.
-        lines.append(f'        <route edges="{origin} {destination}"/>')
-
+        lines.append(f'        <route edges="{route_str}"/>')
         lines.append("    </vehicle>")
 
     lines.append("</routes>")

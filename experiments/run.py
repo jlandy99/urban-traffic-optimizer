@@ -54,6 +54,11 @@ def main(args: list[str] | None = None) -> int:
         default="temp",
         help="Filename to save the experimental data on; if empty ('temp'), no folder will be written (default: 'temp')."
     )
+    parser.add_argument(
+        "--verbose",
+        action=argparse.BooleanOptionalAction,
+        help="Verbose mode; when set, leverage diagnostic mode."
+    )
 
     # Set variables
     args = parser.parse_args()

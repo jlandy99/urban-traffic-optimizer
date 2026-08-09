@@ -34,6 +34,7 @@ def run_simulation(
     routes_file: Path,
     output_dir: Path,
     end_time: int = 300,
+    diagnostic_mode: bool = False,
 ) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -75,7 +76,8 @@ def run_simulation(
     )
 
     # Diagnostics for sanity checks
-    print_sumo_diagnostics()
+    if diagnostic_mode:
+        print_sumo_diagnostics()
 
     departed = set()
     arrived = set()

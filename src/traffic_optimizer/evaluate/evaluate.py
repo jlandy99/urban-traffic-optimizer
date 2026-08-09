@@ -19,6 +19,7 @@ class ScenarioConfig:
     random_seed_traffic: int
     routing_algorithm: RoutingAlgorithm = RoutingAlgorithm.DJIKSTRAS
     filename: str = "temp"
+    verbose: bool = False
 
 
 @dataclass
@@ -52,6 +53,7 @@ def evaluate_scenario(
         network_file=network_file,
         routes_file=routes_file,
         output_dir=output_dir,
+        diagnostic_mode=config.verbose,
     )
     results_file = save_results(
         grid=grid,

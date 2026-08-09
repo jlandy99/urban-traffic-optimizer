@@ -2,17 +2,27 @@ import json
 import random
 import numpy as np
 from dataclasses import dataclass, field
+from enum import Enum
 
 from .intersection import Intersection, IntersectionType
 from .road import Road
+
+
+# This enum matches the values of the command line arguments in experiments/multiple_intersections/phase3_demo_general.py
+# Do not change unless you also change there, otherwise the simulation functionality will break
+class GridMode(int, Enum):
+    RANDOM = 1
+    ALL_STOPS = 2
+    ALL_SIGNALS = 3
+    ALL_ROUNDABOUTS = 4
 
 
 @dataclass
 class Grid:
     rows: int
     cols: int
-    seed: int
     intersections: list[Intersection]
+    seed: int | None = None
     edge_weights: list[list[float]] = None
 
     def __post_init__(self):
@@ -51,6 +61,69 @@ class Grid:
         return "\n".join(lines)
 
 
+def generate_grid(
+    rows: int,
+    cols: int,
+    seed: int,
+    mode: GridMode,
+) -> Grid:
+    if mode == GridMode.ALL_SIGNALS:
+        return generate_uniform_grid(
+            rows=rows,
+            cols=cols,
+            intersection_type=IntersectionType.SIGNAL
+        )
+    elif mode == GridMode.ALL_STOPS:
+        return generate_uniform_grid(
+            rows=rows,
+            cols=cols,
+            intersection_type=IntersectionType.STOP
+        )
+    elif mode == GridMode.ALL_ROUNDABOUTS:
+        return generate_uniform_grid(
+            rows=rows,
+            cols=cols,
+            intersection_type=IntersectionType.ROUNDABOUT
+        )
+    elif mode == GridMode.RANDOM:
+        return generate_random_grid(
+            rows=rows,
+            cols=cols,
+            seed=seed,
+        )
+
+
+def generate_uniform_grid(
+    rows: int,
+    cols: int,
+    intersection_type: IntersectionType,
+) -> Grid:
+    """
+    Generate a uniform grid using a specified intersection type
+    """
+
+    intersections = []
+    id = 0
+
+    for row in range(rows):
+        for col in range(cols):
+            intersections.append(
+                Intersection(
+                    id=id,
+                    row=row,
+                    col=col,
+                    intersection_type=intersection_type,
+                )
+            )
+            id += 1
+
+    return Grid(
+        rows=rows,
+        cols=cols,
+        intersections=intersections,
+    )
+
+
 def generate_random_grid(
     rows: int,
     cols: int,
@@ -87,6 +160,3 @@ def generate_random_grid(
         seed=seed,
         intersections=intersections,
     )
-
-    grid = Grid()
-    return grid

@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 from traffic_optimizer.network.demand import generate_traffic_demand
-from traffic_optimizer.network.grid import generate_random_grid
+from traffic_optimizer.network.grid import generate_grid
 from traffic_optimizer.network.sumo_network import generate_sumo_network
 from traffic_optimizer.simulation.results import save_results
 from traffic_optimizer.simulation.simulation import run_simulation
@@ -15,9 +15,16 @@ def main(args: list[str] | None = None) -> int:
         description="A script to process graph paths or file structures."
     )
     parser.add_argument(
-        "num-vehicles",
+        "--num-vehicles",
         type=int,
-        help="Number of vehicles to run through the simulation."
+        default=20,
+        help="Number of vehicles to run through the simulation (default: 20)."
+    )
+    parser.add_argument(
+        "--grid-type",
+        type=int,
+        default=1,
+        help="Type of grid. Options: [1] random, [2] all stop, [3] all signal, [4] all roundabout (default: 1)."
     )
     parser.add_argument(
         "--num-rows",
@@ -35,7 +42,7 @@ def main(args: list[str] | None = None) -> int:
         "--random-seed-grid",
         type=int,
         default=42,
-        help="Random seed for grid initialization (default: 42)."
+        help="Random seed for grid initialization (default: 42). Only used if --grid-type=1 (random)."
     )
     parser.add_argument(
         "--random-seed-traffic",
@@ -43,22 +50,24 @@ def main(args: list[str] | None = None) -> int:
         default=42,
         help="Random seed for traffic initialization (default: 42)."
     )
-    parsed_args = parser.parse_args(args)
 
     # Set variables
-    num_vehicles = parser.num_vehicles
-    rows = parser.num_rows
-    cols = parser.num_cols
-    random_seed_grid = parser.random_seed_grid
-    random_seed_traffic = parser.random_seed_traffic
+    args = parser.parse_args()
+    num_vehicles = args.num_vehicles
+    grid_type = args.grid_type
+    rows = args.num_rows
+    cols = args.num_cols
+    random_seed_grid = args.random_seed_grid
+    random_seed_traffic = args.random_seed_traffic
 
     # Start simulation
     output_dir = Path("outputs/simulations/grid_4x4_seed_42")
 
-    grid = generate_random_grid(
+    grid = generate_grid(
         rows=rows,
         cols=cols,
         seed=random_seed_grid,
+        mode=grid_type,
     )
 
     print("Generated grid:")

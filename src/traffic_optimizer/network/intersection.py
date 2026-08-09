@@ -7,7 +7,6 @@ class IntersectionType(str, Enum):
     PRIORITY_STOP = "priority_stop"
     ALLWAY_STOP = "allway_stop"
     TRAFFIC_LIGHT = "traffic_light"
-    ROUNDABOUT = "roundabout"
 
 
 SUMO_NODE_TYPES = {
@@ -15,7 +14,6 @@ SUMO_NODE_TYPES = {
     IntersectionType.PRIORITY_STOP: "priority_stop",
     IntersectionType.ALLWAY_STOP: "allway_stop",
     IntersectionType.TRAFFIC_LIGHT: "traffic_light",
-    IntersectionType.ROUNDABOUT: "roundabout",
 }
 
 

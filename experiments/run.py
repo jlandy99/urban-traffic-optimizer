@@ -16,7 +16,7 @@ def main(args: list[str] | None = None) -> int:
         "--grid-type",
         type=int,
         default=1,
-        help="Type of grid. Options: [1] random, [2] all priority (minor yields to major), [3] all priority stop (2-way), [4] all allway stop, [5] all traffic light, [6] all roundabout (default: 1)."
+        help="Type of grid. Options: [1] random, [2] all priority (minor yields to major), [3] all priority stop (2-way), [4] all allway stop, [5] all traffic light, [6] all roundabout -- to be implemented (default: 1)."
     )
     parser.add_argument(
         "--num-rows",

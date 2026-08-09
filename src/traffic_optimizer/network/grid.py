@@ -8,7 +8,7 @@ from .intersection import Intersection, IntersectionType
 from .road import Road
 
 
-# This enum matches the values of the command line arguments in experiments/multiple_intersections/phase3_demo_general.py
+# This enum matches the values of the command line arguments in experiments/run.py
 # Do not change unless you also change there, otherwise the simulation functionality will break
 class GridMode(int, Enum):
     RANDOM = 1
@@ -16,7 +16,6 @@ class GridMode(int, Enum):
     ALL_PRIORITY_STOP = 3
     ALL_ALLWAY_STOP = 4
     ALL_TRAFFIC_LIGHT = 5
-    ALL_ROUNDABOUT = 6
 
 
 @dataclass
@@ -96,13 +95,6 @@ def generate_grid(
             rows=rows,
             cols=cols,
             intersection_type=IntersectionType.TRAFFIC_LIGHT,
-            output_mode=output_mode,
-        )
-    elif mode == GridMode.ALL_ROUNDABOUT:
-        return generate_uniform_grid(
-            rows=rows,
-            cols=cols,
-            intersection_type=IntersectionType.ROUNDABOUT,
             output_mode=output_mode,
         )
     elif mode == GridMode.RANDOM:

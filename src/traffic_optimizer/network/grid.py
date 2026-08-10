@@ -245,9 +245,9 @@ def generate_random_grid(
     num_roads = (rows * (cols - 1) + cols * (rows - 1)) * 2
     road_idx = 0
     road_num_lanes = [
-        random.randint(
+        rng.randrange(
             road_num_lanes_range[0],
-            road_num_lanes_range[1]
+            road_num_lanes_range[1],
         ) for _ in range(num_roads)
     ]
     road_speed_limit_mps = np.linspace(

@@ -48,41 +48,13 @@ def generate_sumo_network(
         "<edges>",
     ]
 
-    for intersection in grid.intersections:
-        row = intersection.row
-        col = intersection.col
-
-        # Horizontal connection (east / west)
-        if col > 0:
-            edge_lines.append(
-                f'    <edge id="west_{row}_{col}" '
-                f'from="node_{row}_{col}" '
-                f'to="node_{row}_{col - 1}" '
-                f'numLanes="1" speed="13.89"/>'
-            )
-        if col < grid.cols - 1:
-            edge_lines.append(
-                f'    <edge id="east_{row}_{col}" '
-                f'from="node_{row}_{col}" '
-                f'to="node_{row}_{col + 1}" '
-                f'numLanes="1" speed="13.89"/>'
-            )
-
-        # Vertical connection (north / south)
-        if row > 0:
-            edge_lines.append(
-                f'    <edge id="north_{row}_{col}" '
-                f'from="node_{row}_{col}" '
-                f'to="node_{row - 1}_{col}" '
-                f'numLanes="1" speed="13.89"/>'
-            )
-        if row < grid.rows - 1:
-            edge_lines.append(
-                f'    <edge id="south_{row}_{col}" '
-                f'from="node_{row}_{col}" '
-                f'to="node_{row + 1}_{col}" '
-                f'numLanes="1" speed="13.89"/>'
-            )
+    for road in grid.roads:
+        edge_lines.append(
+            f'    <edge id="{road.id}" '
+            f'from="node_{road.source[0]}_{road.source[1]}" '
+            f'to="node_{road.destination[0]}_{road.destination[1]}" '
+            f'numLanes="{road.lanes}" speed="{road.speed_limit_mps}"/>'
+        )
 
     edge_lines.append("</edges>")
 

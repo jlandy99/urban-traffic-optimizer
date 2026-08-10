@@ -55,6 +55,42 @@ def main(args: list[str] | None = None) -> int:
         help="Filename to save the experimental data on; if empty ('temp'), no folder will be written (default: 'temp')."
     )
     parser.add_argument(
+        "--road-num-lanes",
+        type=int,
+        default=1,
+        help="Number of lanes for each road. To be used in uniform grid construction only (default: 1)."
+    )
+    parser.add_argument(
+        "--road-speed-limit-mps",
+        type=float,
+        default=13.89,
+        help="Speed limit for each road. To be used in uniform grid construction only (default = 13.89)."
+    )
+    parser.add_argument(
+        "--road-num-lanes-low",
+        type=int,
+        default=1,
+        help=" Minimum number of lanes for each road. To be used in random grid construction only (default: 1)."
+    )
+    parser.add_argument(
+        "--road-num-lanes-high",
+        type=int,
+        default=3,
+        help="Maximum number of lanes for each road. To be used in random grid construction only (default: 3)."
+    )
+    parser.add_argument(
+        "--road-speed-limit-mps-low",
+        type=float,
+        default=10.00,
+        help="Minimum speed limit for each road. To be used in random grid construction only (default = 10.00)."
+    )
+    parser.add_argument(
+        "--road-speed-limit-mps-high",
+        type=float,
+        default=25.00,
+        help="Maximum speed limit for each road. To be used in random grid construction only (default = 25.00)."
+    )
+    parser.add_argument(
         "--verbose",
         action=argparse.BooleanOptionalAction,
         help="Verbose mode; when set, leverage diagnostic mode."
@@ -70,6 +106,16 @@ def main(args: list[str] | None = None) -> int:
         random_seed_grid=args.random_seed_grid,
         random_seed_traffic=args.random_seed_traffic,
         routing_algorithm=args.routing_algorithm,
+        road_num_lanes=args.road_num_lanes,
+        road_speed_limit_mps=args.road_speed_limit_mps,
+        road_num_lanes_range=(
+            args.road_num_lanes_low,
+            args.road_num_lanes_high,
+        ),
+        road_speed_limit_mps_range=(
+            args.road_speed_limit_mps_low,
+            args.road_speed_limit_mps_high,
+        ),
         filename=args.filename,
     )
     metrics = evaluate_scenario(scenario)
